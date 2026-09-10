@@ -1,102 +1,499 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BizLens AI</title>
+
+  <title>BizLens AI - Business Data Analyzer</title>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f7fb;
       margin: 0;
       padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #111827;
     }
 
-    .box {
-      max-width: 600px;
-      margin: 40px auto;
-      background: white;
+    .container {
+      max-width: 850px;
+      margin: 30px auto;
+    }
+
+    .header {
+      background: #111827;
+      color: white;
       padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 36px;
+    }
+
+    .header p {
+      margin: 10px 0 0;
+      color: #d1d5db;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
       border-radius: 18px;
       box-shadow: 0 5px 25px rgba(0,0,0,0.08);
-      text-align: center;
+      margin-bottom: 20px;
     }
 
-    h1 {
-      font-size: 34px;
-      margin-bottom: 10px;
-    }
-
-    p {
-      color: #666;
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
     }
 
     textarea {
       width: 100%;
-      height: 150px;
-      margin-top: 20px;
-      padding: 12px;
-      box-sizing: border-box;
-      border: 1px solid #ddd;
-      border-radius: 10px;
+      height: 160px;
+      padding: 15px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      resize: vertical;
       font-size: 15px;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #111827;
     }
 
     button {
+      width: 100%;
       margin-top: 15px;
-      padding: 13px 25px;
+      padding: 15px;
       border: none;
-      border-radius: 10px;
-      background: #111;
+      border-radius: 12px;
+      background: #111827;
       color: white;
-      font-size: 16px;
+      font-size: 17px;
+      font-weight: bold;
       cursor: pointer;
     }
 
+    button:hover {
+      opacity: 0.9;
+    }
+
     #result {
-      margin-top: 20px;
+      display: none;
+    }
+
+    .result-title {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .metric {
+      padding: 18px;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      background: #f9fafb;
+    }
+
+    .metric-name {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+
+    .metric-value {
+      font-size: 23px;
+      font-weight: bold;
+    }
+
+    .insights {
+      margin-top: 25px;
+    }
+
+    .insight {
       padding: 15px;
-      background: #f1f3f5;
-      border-radius: 10px;
-      text-align: left;
+      margin-bottom: 10px;
+      border-radius: 12px;
+      background: #f3f4f6;
+    }
+
+    .good {
+      border-left: 5px solid #16a34a;
+    }
+
+    .warning {
+      border-left: 5px solid #dc2626;
+    }
+
+    .info {
+      border-left: 5px solid #2563eb;
+    }
+
+    .small {
+      margin-top: 15px;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 600px) {
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .header h1 {
+        font-size: 29px;
+      }
+
+      body {
+        padding: 12px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <div class="box">
-    <h1>BizLens AI</h1>
+  <div class="container">
 
-    <p>Business Data Analyzer</p>
-
-    <textarea id="data" placeholder="Enter your business data here..."></textarea>
-
-    <button onclick="analyze()">Analyze Business</button>
-
-    <div id="result">
-      Your analysis will appear here.
+    <div class="header">
+      <h1>🤖 BizLens AI</h1>
+      <p>Business Data Analyzer</p>
     </div>
+
+    <div class="card">
+
+      <label for="data">Enter your business data</label>
+
+      <textarea
+        id="data"
+        placeholder="Example:
+Sales: ₹5,00,000
+Expenses: ₹3,50,000
+Customers: 800">
+      </textarea>
+
+      <button onclick="analyzeBusiness()">
+        🔍 Analyze Business
+      </button>
+
+      <p class="small">
+        Tip: Enter Sales, Expenses and Customers for a more useful analysis.
+      </p>
+
+    </div>
+
+    <div class="card" id="result">
+
+      <div class="result-title">
+        📊 Business Analysis
+      </div>
+
+      <div class="metrics">
+
+        <div class="metric">
+          <div class="metric-name">Sales / Revenue</div>
+          <div class="metric-value" id="sales">₹0</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-name">Expenses</div>
+          <div class="metric-value" id="expenses">₹0</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-name">Profit</div>
+          <div class="metric-value" id="profit">₹0</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-name">Profit Margin</div>
+          <div class="metric-value" id="margin">0%</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-name">Customers</div>
+          <div class="metric-value" id="customers">0</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-name">Revenue / Customer</div>
+          <div class="metric-value" id="revenuePerCustomer">₹0</div>
+        </div>
+
+      </div>
+
+      <div class="insights">
+
+        <h3>💡 BizLens Insights</h3>
+
+        <div id="insightBox"></div>
+
+      </div>
+
+    </div>
+
   </div>
 
   <script>
-    function analyze() {
-      const data = document.getElementById("data").value.trim();
+
+    function getNumber(text, patterns) {
+
+      for (let pattern of patterns) {
+
+        const regex = new RegExp(
+          pattern + "\\s*[:=]?\\s*[₹$€£]?\\s*([0-9,]+(?:\\.[0-9]+)?)",
+          "i"
+        );
+
+        const match = text.match(regex);
+
+        if (match) {
+          return parseFloat(match[1].replace(/,/g, ""));
+        }
+      }
+
+      return 0;
+    }
+
+
+    function formatMoney(number) {
+
+      return "₹" + Math.round(number).toLocaleString("en-IN");
+
+    }
+
+
+    function analyzeBusiness() {
+
+      const data = document
+        .getElementById("data")
+        .value
+        .trim();
 
       if (!data) {
-        document.getElementById("result").innerHTML =
-          "⚠️ Please enter some business data first.";
+
+        alert("Please enter your business data first.");
+
         return;
       }
 
-      document.getElementById("result").innerHTML = `
-        <b>📊 Initial Analysis</b><br><br>
-        Data received successfully.<br>
-        BizLens AI is ready for deeper analysis.<br><br>
-        💡 Next version: sales, expenses, profit and business opportunity detection.
-      `;
+
+      const sales = getNumber(data, [
+        "sales",
+        "revenue",
+        "income"
+      ]);
+
+
+      const expenses = getNumber(data, [
+        "expenses",
+        "expense",
+        "cost",
+        "costs"
+      ]);
+
+
+      const customers = getNumber(data, [
+        "customers",
+        "customer",
+        "clients",
+        "client"
+      ]);
+
+
+      const profit = sales - expenses;
+
+
+      let margin = 0;
+
+      if (sales > 0) {
+        margin = (profit / sales) * 100;
+      }
+
+
+      let revenuePerCustomer = 0;
+
+      if (customers > 0) {
+        revenuePerCustomer = sales / customers;
+      }
+
+
+      document.getElementById("sales").textContent =
+        formatMoney(sales);
+
+      document.getElementById("expenses").textContent =
+        formatMoney(expenses);
+
+      document.getElementById("profit").textContent =
+        formatMoney(profit);
+
+      document.getElementById("margin").textContent =
+        margin.toFixed(1) + "%";
+
+      document.getElementById("customers").textContent =
+        customers.toLocaleString("en-IN");
+
+      document.getElementById("revenuePerCustomer").textContent =
+        formatMoney(revenuePerCustomer);
+
+
+      const insightBox =
+        document.getElementById("insightBox");
+
+
+      insightBox.innerHTML = "";
+
+
+      function addInsight(icon, title, text, type) {
+
+        const div = document.createElement("div");
+
+        div.className = "insight " + type;
+
+        div.innerHTML =
+          "<b>" + icon + " " + title + "</b><br>" +
+          text;
+
+        insightBox.appendChild(div);
+      }
+
+
+      if (sales === 0) {
+
+        addInsight(
+          "⚠️",
+          "Sales data missing",
+          "Enter your Sales or Revenue amount to calculate business performance.",
+          "warning"
+        );
+
+      } else {
+
+        addInsight(
+          "💰",
+          "Financial result",
+          "Your calculated profit is " +
+          formatMoney(profit) +
+          ".",
+          profit >= 0 ? "good" : "warning"
+        );
+
+
+        if (margin >= 30) {
+
+          addInsight(
+            "🚀",
+            "Strong margin",
+            "The calculated profit margin is " +
+            margin.toFixed(1) +
+            "%. This indicates a relatively strong margin based on the data entered.",
+            "good"
+          );
+
+        } else if (margin >= 10) {
+
+          addInsight(
+            "📈",
+            "Moderate margin",
+            "The calculated profit margin is " +
+            margin.toFixed(1) +
+            "%. Look for ways to increase revenue or reduce unnecessary costs.",
+            "info"
+          );
+
+        } else if (margin >= 0) {
+
+          addInsight(
+            "⚠️",
+            "Low margin",
+            "The calculated profit margin is only " +
+            margin.toFixed(1) +
+            "%. Review your major expenses and pricing.",
+            "warning"
+          );
+
+        } else {
+
+          addInsight(
+            "🚨",
+            "Loss detected",
+            "Expenses are higher than sales in the data entered. Review costs and revenue sources.",
+            "warning"
+          );
+
+        }
+
+
+        if (expenses > sales * 0.7) {
+
+          addInsight(
+            "💸",
+            "High expenses",
+            "Expenses are more than 70% of sales. Finding unnecessary costs could improve profitability.",
+            "warning"
+          );
+
+        }
+
+
+        if (customers > 0 && revenuePerCustomer > 0) {
+
+          addInsight(
+            "👥",
+            "Customer value",
+            "Average revenue per customer from the entered data is " +
+            formatMoney(revenuePerCustomer) +
+            ".",
+            "info"
+          );
+
+        }
+
+
+        if (customers === 0) {
+
+          addInsight(
+            "👥",
+            "Customer data missing",
+            "Add your customer count to estimate revenue per customer.",
+            "info"
+          );
+
+        }
+
+
+        addInsight(
+          "💡",
+          "Next action",
+          "Compare these numbers with previous months to identify whether your business is improving or declining.",
+          "info"
+        );
+
+      }
+
+
+      document.getElementById("result").style.display =
+        "block";
+
     }
+
   </script>
 
 </body>
