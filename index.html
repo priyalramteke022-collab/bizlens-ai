@@ -1,802 +1,1250 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>BizLens AI - Business Data Analyzer</title>
+<title>BizLens AI - Business Data Analyzer</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+*{box-sizing:border-box}
 
-    body {
-      margin: 0;
-      padding: 20px;
-      font-family: Arial, sans-serif;
-      background: #f4f7fb;
-      color: #111827;
-    }
+body{
+margin:0;
+padding:20px;
+font-family:Arial,sans-serif;
+background:#f4f7fb;
+color:#111827;
+}
 
-    .container {
-      max-width: 850px;
-      margin: 30px auto;
-    }
+.container{
+max-width:1000px;
+margin:30px auto;
+}
 
-    .header {
-      background: #111827;
-      color: white;
-      padding: 30px;
-      border-radius: 20px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
+.header{
+background:#111827;
+color:white;
+padding:30px;
+border-radius:20px;
+text-align:center;
+margin-bottom:20px;
+}
 
-    .header h1 {
-      margin: 0;
-      font-size: 36px;
-    }
+.header h1{
+margin:0;
+font-size:36px;
+}
 
-    .header p {
-      margin: 10px 0 0;
-      color: #d1d5db;
-    }
+.header p{
+margin:10px 0 0;
+color:#d1d5db;
+}
 
-    .card {
-      background: white;
-      padding: 25px;
-      border-radius: 18px;
-      box-shadow: 0 5px 25px rgba(0,0,0,0.08);
-      margin-bottom: 20px;
-    }
+.card{
+background:white;
+padding:25px;
+border-radius:18px;
+box-shadow:0 5px 25px rgba(0,0,0,.08);
+margin-bottom:20px;
+}
 
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
+label{
+display:block;
+font-weight:bold;
+margin-bottom:8px;
+}
 
-    textarea {
-      width: 100%;
-      height: 160px;
-      padding: 15px;
-      border: 1px solid #d1d5db;
-      border-radius: 12px;
-      resize: vertical;
-      font-size: 15px;
-      outline: none;
-    }
+textarea{
+width:100%;
+height:160px;
+padding:15px;
+border:1px solid #d1d5db;
+border-radius:12px;
+resize:vertical;
+font-size:15px;
+}
 
-    textarea:focus {
-      border-color: #111827;
-    }
+button{
+width:100%;
+margin-top:15px;
+padding:15px;
+border:0;
+border-radius:12px;
+background:#111827;
+color:white;
+font-size:17px;
+font-weight:bold;
+cursor:pointer;
+}
 
-    button {
-      width: 100%;
-      margin-top: 15px;
-      padding: 15px;
-      border: none;
-      border-radius: 12px;
-      background: #111827;
-      color: white;
-      font-size: 17px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+#result{
+display:none;
+}
 
-    #result {
-      display: none;
-    }
+.result-title{
+font-size:24px;
+font-weight:bold;
+margin-bottom:20px;
+}
 
-    .result-title {
-      font-size: 24px;
-      margin-bottom: 20px;
-    }
+/* TOP SECTION */
 
-    /* HEALTH SCORE */
+.top-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+}
 
-    .health-box {
-      text-align: center;
-      background: #f9fafb;
-      border-radius: 18px;
-      padding: 25px;
-      margin-bottom: 25px;
-    }
+.health-box{
+text-align:center;
+background:#f9fafb;
+border-radius:18px;
+padding:25px;
+}
 
-    .score {
-      font-size: 58px;
-      font-weight: bold;
-      margin: 10px 0;
-    }
+.score{
+font-size:58px;
+font-weight:bold;
+margin:10px 0;
+}
 
-    .score-label {
-      font-size: 19px;
-      font-weight: bold;
-    }
+.score-label{
+font-size:19px;
+font-weight:bold;
+}
 
-    .score-description {
-      color: #6b7280;
-      margin-top: 8px;
-    }
+.score-description{
+color:#6b7280;
+margin-top:8px;
+}
 
-    .score-bar {
-      width: 100%;
-      height: 12px;
-      background: #e5e7eb;
-      border-radius: 20px;
-      overflow: hidden;
-      margin-top: 18px;
-    }
+.score-bar{
+width:100%;
+height:12px;
+background:#e5e7eb;
+border-radius:20px;
+overflow:hidden;
+margin-top:18px;
+}
 
-    .score-fill {
-      height: 100%;
-      width: 0%;
-      background: #111827;
-      transition: width 0.6s ease;
-    }
+.score-fill{
+height:100%;
+width:0%;
+background:#16a34a;
+transition:.6s;
+}
 
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
-    }
+/* BREAKDOWN */
 
-    .metric {
-      padding: 18px;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
-      background: #f9fafb;
-    }
+.breakdown{
+background:#f9fafb;
+border-radius:18px;
+padding:22px;
+}
 
-    .metric-name {
-      font-size: 14px;
-      color: #6b7280;
-      margin-bottom: 8px;
-    }
+.breakdown h3{
+margin-top:0;
+}
 
-    .metric-value {
-      font-size: 23px;
-      font-weight: bold;
-    }
+.breakdown-row{
+margin:18px 0;
+}
 
-    .insights {
-      margin-top: 25px;
-    }
+.breakdown-top{
+display:flex;
+justify-content:space-between;
+font-weight:bold;
+margin-bottom:7px;
+}
 
-    .insight {
-      padding: 15px;
-      margin-bottom: 10px;
-      border-radius: 12px;
-      background: #f3f4f6;
-    }
+.progress{
+height:10px;
+background:#e5e7eb;
+border-radius:20px;
+overflow:hidden;
+}
 
-    .good {
-      border-left: 5px solid #16a34a;
-    }
+.progress-fill{
+height:100%;
+border-radius:20px;
+}
 
-    .warning {
-      border-left: 5px solid #dc2626;
-    }
+.lost{
+margin-top:20px;
+padding:15px;
+border-radius:12px;
+background:#fff1f2;
+border-left:5px solid #dc2626;
+font-weight:bold;
+}
 
-    .info {
-      border-left: 5px solid #2563eb;
-    }
+/* METRICS */
 
-    .small {
-      margin-top: 15px;
-      color: #6b7280;
-      font-size: 13px;
-      line-height: 1.5;
-    }
+.metrics{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:15px;
+margin-top:20px;
+}
 
-    .priority {
-      padding: 18px;
-      border-radius: 14px;
-      background: #f9fafb;
-      border-left: 5px solid #111827;
-      margin-top: 20px;
-    }
+.metric{
+padding:18px;
+border:1px solid #e5e7eb;
+border-radius:14px;
+background:#f9fafb;
+}
 
-    @media (max-width: 600px) {
-      .metrics {
-        grid-template-columns: 1fr;
-      }
+.metric-name{
+font-size:14px;
+color:#6b7280;
+margin-bottom:8px;
+}
 
-      .header h1 {
-        font-size: 29px;
-      }
+.metric-value{
+font-size:23px;
+font-weight:bold;
+}
 
-      body {
-        padding: 12px;
-      }
-    }
-  </style>
+/* CHARTS */
+
+.charts{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+margin-top:20px;
+}
+
+.chart-card{
+border:1px solid #e5e7eb;
+border-radius:16px;
+padding:20px;
+background:white;
+}
+
+.chart-card h3{
+margin-top:0;
+}
+
+/* BAR CHART */
+
+.bar-chart{
+height:230px;
+display:flex;
+align-items:flex-end;
+justify-content:center;
+gap:50px;
+border-bottom:2px solid #d1d5db;
+padding:20px;
+}
+
+.bar-box{
+height:190px;
+display:flex;
+align-items:flex-end;
+gap:30px;
+}
+
+.bar{
+width:65px;
+border-radius:8px 8px 0 0;
+position:relative;
+}
+
+.sales-bar{
+background:#2563eb;
+}
+
+.expense-bar{
+background:#f97316;
+}
+
+.bar-label{
+position:absolute;
+top:-28px;
+width:100%;
+text-align:center;
+font-weight:bold;
+font-size:13px;
+}
+
+.bar-name{
+text-align:center;
+font-size:13px;
+margin-top:8px;
+}
+
+/* DONUT */
+
+.donut-wrap{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:25px;
+}
+
+.donut{
+width:180px;
+height:180px;
+border-radius:50%;
+background:conic-gradient(
+#2563eb 0deg,
+#2563eb 180deg,
+#f97316 180deg,
+#f97316 360deg
+);
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.donut-inner{
+width:100px;
+height:100px;
+background:white;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+font-weight:bold;
+}
+
+.legend div{
+margin:12px 0;
+}
+
+.dot{
+display:inline-block;
+width:12px;
+height:12px;
+border-radius:50%;
+margin-right:7px;
+}
+
+.blue{background:#2563eb}
+.orange{background:#f97316}
+
+/* PROFIT GRAPH */
+
+.profit-chart{
+height:220px;
+display:flex;
+align-items:flex-end;
+justify-content:center;
+gap:60px;
+border-bottom:2px solid #d1d5db;
+padding:20px;
+}
+
+.profit-column{
+width:80px;
+background:#16a34a;
+border-radius:8px 8px 0 0;
+position:relative;
+}
+
+.profit-value{
+position:absolute;
+top:-25px;
+width:100%;
+text-align:center;
+font-weight:bold;
+font-size:13px;
+}
+
+.margin-column{
+width:80px;
+background:#7c3aed;
+border-radius:8px 8px 0 0;
+position:relative;
+}
+
+.margin-value{
+position:absolute;
+top:-25px;
+width:100%;
+text-align:center;
+font-weight:bold;
+font-size:13px;
+}
+
+/* INSIGHTS */
+
+.insights{
+margin-top:25px;
+}
+
+.insight{
+padding:15px;
+margin-bottom:10px;
+border-radius:12px;
+background:#f3f4f6;
+}
+
+.good{
+border-left:5px solid #16a34a;
+}
+
+.warning{
+border-left:5px solid #dc2626;
+}
+
+.info{
+border-left:5px solid #2563eb;
+}
+
+/* PRIORITY */
+
+.priority{
+padding:18px;
+border-radius:14px;
+background:#f9fafb;
+border-left:5px solid #111827;
+margin-top:20px;
+}
+
+.small{
+margin-top:15px;
+color:#6b7280;
+font-size:13px;
+line-height:1.5;
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+.top-grid,
+.charts{
+grid-template-columns:1fr;
+}
+
+.metrics{
+grid-template-columns:1fr 1fr;
+}
+
+.header h1{
+font-size:29px;
+}
+
+body{
+padding:12px;
+}
+
+.donut-wrap{
+flex-direction:column;
+}
+
+}
+
+@media(max-width:450px){
+
+.metrics{
+grid-template-columns:1fr;
+}
+
+.bar-chart{
+gap:20px;
+}
+
+}
+</style>
 </head>
 
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <div class="header">
-      <h1>🤖 BizLens AI</h1>
-      <p>Business Data Analyzer</p>
-    </div>
+<div class="header">
+<h1>🤖 BizLens AI</h1>
+<p>Business Data Analyzer</p>
+</div>
 
-    <div class="card">
+<div class="card">
 
-      <label for="data">Enter your business data</label>
+<label>Enter your business data</label>
 
-      <textarea
-        id="data"
-        placeholder="Example:
+<textarea id="data" placeholder="Example:
 Sales: ₹5,00,000
 Expenses: ₹3,50,000
 Customers: 800"></textarea>
 
-      <button onclick="analyzeBusiness()">
-        🔍 Analyze Business
-      </button>
+<button onclick="analyzeBusiness()">
+🔍 Analyze Business
+</button>
 
-      <p class="small">
-        Tip: Enter Sales, Expenses and Customers for a more useful analysis.
-      </p>
+<p class="small">
+Tip: Enter Sales, Expenses and Customers for a more useful analysis.
+</p>
 
-    </div>
+</div>
 
-    <div class="card" id="result">
 
-      <div class="result-title">
-        📊 Business Analysis
-      </div>
+<div class="card" id="result">
 
-      <!-- HEALTH SCORE -->
+<div class="result-title">
+📊 Business Analysis
+</div>
 
-      <div class="health-box">
 
-        <div>🏆 Business Health Score</div>
+<!-- SCORE + BREAKDOWN -->
 
-        <div class="score" id="healthScore">
-          0/100
-        </div>
+<div class="top-grid">
 
-        <div class="score-label" id="healthLabel">
-          -
-        </div>
+<div class="health-box">
 
-        <div class="score-description" id="healthDescription">
-          -
-        </div>
+<div>🏆 Business Health Score</div>
 
-        <div class="score-bar">
-          <div class="score-fill" id="scoreFill"></div>
-        </div>
+<div class="score" id="healthScore">
+0/100
+</div>
 
-      </div>
+<div class="score-label" id="healthLabel">
+-
+</div>
 
-      <!-- ORIGINAL METRICS -->
+<div class="score-description" id="healthDescription">
+-
+</div>
 
-      <div class="metrics">
+<div class="score-bar">
+<div class="score-fill" id="scoreFill"></div>
+</div>
 
-        <div class="metric">
-          <div class="metric-name">Sales / Revenue</div>
-          <div class="metric-value" id="sales">₹0</div>
-        </div>
+</div>
 
-        <div class="metric">
-          <div class="metric-name">Expenses</div>
-          <div class="metric-value" id="expenses">₹0</div>
-        </div>
 
-        <div class="metric">
-          <div class="metric-name">Profit</div>
-          <div class="metric-value" id="profit">₹0</div>
-        </div>
+<div class="breakdown">
 
-        <div class="metric">
-          <div class="metric-name">Profit Margin</div>
-          <div class="metric-value" id="margin">0%</div>
-        </div>
+<h3>🔎 Score Breakdown</h3>
 
-        <div class="metric">
-          <div class="metric-name">Customers</div>
-          <div class="metric-value" id="customers">0</div>
-        </div>
+<div class="breakdown-row">
 
-        <div class="metric">
-          <div class="metric-name">Revenue / Customer</div>
-          <div class="metric-value" id="revenuePerCustomer">₹0</div>
-        </div>
+<div class="breakdown-top">
+<span>💰 Profitability</span>
+<span id="profitPoints">0/50</span>
+</div>
 
-      </div>
+<div class="progress">
+<div class="progress-fill" id="profitProgress"
+style="background:#16a34a;width:0%">
+</div>
+</div>
 
-      <!-- INSIGHTS -->
+</div>
 
-      <div class="insights">
 
-        <h3>💡 BizLens Insights</h3>
+<div class="breakdown-row">
 
-        <div id="insightBox"></div>
+<div class="breakdown-top">
+<span>💸 Expense Control</span>
+<span id="expensePoints">0/30</span>
+</div>
 
-      </div>
+<div class="progress">
+<div class="progress-fill" id="expenseProgress"
+style="background:#2563eb;width:0%">
+</div>
+</div>
 
-      <!-- PRIORITY ACTION -->
+</div>
 
-      <div class="priority">
 
-        <b>🎯 Priority Action</b>
+<div class="breakdown-row">
 
-        <p id="priorityAction">
-          -
-        </p>
+<div class="breakdown-top">
+<span>👥 Customer Data</span>
+<span id="customerPoints">0/20</span>
+</div>
 
-      </div>
+<div class="progress">
+<div class="progress-fill" id="customerProgress"
+style="background:#f97316;width:0%">
+</div>
+</div>
 
-    </div>
+</div>
 
-  </div>
 
-  <script>
+<div class="lost">
+❌ Points Lost: <span id="pointsLost">0</span>/100
+<br>
+<small id="lostMessage">
+-
+</small>
+</div>
 
-    function getNumber(text, patterns) {
+</div>
 
-      for (let pattern of patterns) {
+</div>
 
-        const regex = new RegExp(
-          pattern + "\\s*[:=]?\\s*[₹$€£]?\\s*([0-9,]+(?:\\.[0-9]+)?)",
-          "i"
-        );
 
-        const match = text.match(regex);
+<!-- METRICS -->
 
-        if (match) {
-          return parseFloat(match[1].replace(/,/g, ""));
-        }
-      }
+<div class="metrics">
 
-      return 0;
-    }
+<div class="metric">
+<div class="metric-name">Sales / Revenue</div>
+<div class="metric-value" id="sales">₹0</div>
+</div>
 
+<div class="metric">
+<div class="metric-name">Expenses</div>
+<div class="metric-value" id="expenses">₹0</div>
+</div>
 
-    function formatMoney(number) {
+<div class="metric">
+<div class="metric-name">Profit</div>
+<div class="metric-value" id="profit">₹0</div>
+</div>
 
-      return "₹" + Math.round(number).toLocaleString("en-IN");
+<div class="metric">
+<div class="metric-name">Profit Margin</div>
+<div class="metric-value" id="margin">0%</div>
+</div>
 
-    }
+<div class="metric">
+<div class="metric-name">Customers</div>
+<div class="metric-value" id="customers">0</div>
+</div>
 
+<div class="metric">
+<div class="metric-name">Revenue / Customer</div>
+<div class="metric-value" id="revenuePerCustomer">₹0</div>
+</div>
 
-    function calculateHealthScore(sales, expenses, customers) {
+</div>
 
-      if (sales <= 0) {
-        return 0;
-      }
 
-      const profit = sales - expenses;
+<!-- CHARTS -->
 
-      const margin = (profit / sales) * 100;
+<div class="charts">
 
-      let score = 0;
+<div class="chart-card">
 
+<h3>📊 Sales vs Expenses</h3>
 
-      /* Profitability: 50 points */
+<div class="bar-chart">
 
-      if (margin >= 30) {
-        score += 50;
-      }
+<div>
+<div class="bar sales-bar" id="salesBar">
+<div class="bar-label" id="salesBarValue">₹0</div>
+</div>
+<div class="bar-name">Sales</div>
+</div>
 
-      else if (margin >= 20) {
-        score += 42;
-      }
+<div>
+<div class="bar expense-bar" id="expenseBar">
+<div class="bar-label" id="expenseBarValue">₹0</div>
+</div>
+<div class="bar-name">Expenses</div>
+</div>
 
-      else if (margin >= 10) {
-        score += 32;
-      }
+</div>
 
-      else if (margin >= 0) {
-        score += 20;
-      }
+</div>
 
-      else {
-        score += 0;
-      }
 
+<div class="chart-card">
 
-      /* Expense control: 30 points */
+<h3>🥧 Revenue Distribution</h3>
 
-      const expenseRatio = expenses / sales;
+<div class="donut-wrap">
 
-      if (expenseRatio <= 0.50) {
-        score += 30;
-      }
+<div class="donut" id="donut">
 
-      else if (expenseRatio <= 0.60) {
-        score += 25;
-      }
+<div class="donut-inner">
+<span id="donutText">₹0</span>
+</div>
 
-      else if (expenseRatio <= 0.70) {
-        score += 18;
-      }
+</div>
 
-      else if (expenseRatio <= 0.85) {
-        score += 10;
-      }
+<div class="legend">
 
-      else {
-        score += 0;
-      }
+<div>
+<span class="dot blue"></span>
+Profit:
+<b id="profitPercent">0%</b>
+</div>
 
+<div>
+<span class="dot orange"></span>
+Expenses:
+<b id="expensePercent">0%</b>
+</div>
 
-      /* Customer data: 20 points */
+</div>
 
-      if (customers > 0) {
-        score += 20;
-      }
+</div>
 
-      else {
-        score += 5;
-      }
+</div>
 
+</div>
 
-      return Math.round(score);
 
-    }
+<!-- PROFIT GRAPH -->
 
+<div class="chart-card" style="margin-top:20px">
 
-    function analyzeBusiness() {
+<h3>📈 Profit & Profit Margin</h3>
 
-      const data = document
-        .getElementById("data")
-        .value
-        .trim();
+<div class="profit-chart">
 
+<div>
+<div class="profit-column" id="profitBar">
+<div class="profit-value" id="profitBarValue">₹0</div>
+</div>
+<div class="bar-name">Profit</div>
+</div>
 
-      if (!data) {
+<div>
+<div class="margin-column" id="marginBar">
+<div class="margin-value" id="marginBarValue">0%</div>
+</div>
+<div class="bar-name">Margin</div>
+</div>
 
-        alert("Please enter your business data first.");
+</div>
 
-        return;
-      }
+</div>
 
 
-      const sales = getNumber(data, [
-        "sales",
-        "revenue",
-        "income"
-      ]);
+<!-- INSIGHTS -->
 
+<div class="insights">
 
-      const expenses = getNumber(data, [
-        "expenses",
-        "expense",
-        "cost",
-        "costs"
-      ]);
+<h3>💡 BizLens Insights</h3>
 
+<div id="insightBox"></div>
 
-      const customers = getNumber(data, [
-        "customers",
-        "customer",
-        "clients",
-        "client"
-      ]);
+</div>
 
 
-      const profit = sales - expenses;
+<!-- PRIORITY -->
 
+<div class="priority">
 
-      let margin = 0;
+<b>🎯 Priority Action</b>
 
-      if (sales > 0) {
-        margin = (profit / sales) * 100;
-      }
+<p id="priorityAction">-</p>
 
+</div>
 
-      let revenuePerCustomer = 0;
+</div>
 
-      if (customers > 0) {
-        revenuePerCustomer = sales / customers;
-      }
+</div>
 
 
-      /* ORIGINAL RESULTS */
+<script>
 
-      document.getElementById("sales").textContent =
-        formatMoney(sales);
+function getNumber(text,patterns){
 
-      document.getElementById("expenses").textContent =
-        formatMoney(expenses);
+for(let pattern of patterns){
 
-      document.getElementById("profit").textContent =
-        formatMoney(profit);
+const regex=new RegExp(
+pattern+"\\s*[:=]?\\s*[₹$€£]?\\s*([0-9,]+(?:\\.[0-9]+)?)",
+"i"
+);
 
-      document.getElementById("margin").textContent =
-        margin.toFixed(1) + "%";
+const match=text.match(regex);
 
-      document.getElementById("customers").textContent =
-        customers.toLocaleString("en-IN");
+if(match){
+return parseFloat(match[1].replace(/,/g,""));
+}
 
-      document.getElementById("revenuePerCustomer").textContent =
-        formatMoney(revenuePerCustomer);
+}
 
+return 0;
+}
 
-      /* HEALTH SCORE */
 
-      const healthScore =
-        calculateHealthScore(
-          sales,
-          expenses,
-          customers
-        );
+function formatMoney(number){
 
+return "₹"+Math.round(number).toLocaleString("en-IN");
 
-      document.getElementById("healthScore").textContent =
-        healthScore + "/100";
+}
 
 
-      document.getElementById("scoreFill").style.width =
-        healthScore + "%";
+/* SCORE CALCULATION */
 
+function calculateScore(sales,expenses,customers){
 
-      let healthLabel = "";
-      let healthDescription = "";
+let profitPoints=0;
+let expensePoints=0;
+let customerPoints=0;
 
+if(sales>0){
 
-      if (healthScore >= 80) {
+const profit=sales-expenses;
+const margin=(profit/sales)*100;
 
-        healthLabel = "🟢 Excellent";
+/* PROFITABILITY 50 */
 
-        healthDescription =
-          "The business looks financially strong based on the data entered.";
+if(margin>=30)
+profitPoints=50;
 
-      }
+else if(margin>=20)
+profitPoints=42;
 
-      else if (healthScore >= 60) {
+else if(margin>=10)
+profitPoints=32;
 
-        healthLabel = "🟡 Good";
+else if(margin>=0)
+profitPoints=20;
 
-        healthDescription =
-          "The business has a healthy foundation, but there is room for improvement.";
+else
+profitPoints=0;
 
-      }
 
-      else if (healthScore >= 40) {
+/* EXPENSE CONTROL 30 */
 
-        healthLabel = "🟠 Needs Attention";
+const expenseRatio=expenses/sales;
 
-        healthDescription =
-          "Some important business areas need attention.";
+if(expenseRatio<=0.50)
+expensePoints=30;
 
-      }
+else if(expenseRatio<=0.60)
+expensePoints=25;
 
-      else {
+else if(expenseRatio<=0.70)
+expensePoints=18;
 
-        healthLabel = "🔴 Critical";
+else if(expenseRatio<=0.85)
+expensePoints=10;
 
-        healthDescription =
-          "The entered numbers show significant areas that need improvement.";
+else
+expensePoints=0;
 
-      }
 
+/* CUSTOMER DATA 20 */
 
-      document.getElementById("healthLabel").textContent =
-        healthLabel;
+if(customers>0)
+customerPoints=20;
 
-      document.getElementById("healthDescription").textContent =
-        healthDescription;
+else
+customerPoints=5;
 
+}
 
-      /* INSIGHTS */
+return {
+profitPoints,
+expensePoints,
+customerPoints,
+total:profitPoints+expensePoints+customerPoints
+};
 
-      const insightBox =
-        document.getElementById("insightBox");
+}
 
 
-      insightBox.innerHTML = "";
+function analyzeBusiness(){
 
+const data=document.getElementById("data").value.trim();
 
-      function addInsight(icon, title, text, type) {
+if(!data){
 
-        const div = document.createElement("div");
+alert("Please enter your business data first.");
+return;
 
-        div.className =
-          "insight " + type;
+}
 
-        div.innerHTML =
-          "<b>" + icon + " " + title + "</b><br>" +
-          text;
 
-        insightBox.appendChild(div);
+const sales=getNumber(data,[
+"sales",
+"revenue",
+"income"
+]);
 
-      }
 
+const expenses=getNumber(data,[
+"expenses",
+"expense",
+"cost",
+"costs"
+]);
 
-      if (sales === 0) {
 
-        addInsight(
-          "⚠️",
-          "Sales data missing",
-          "Enter your Sales or Revenue amount to calculate business performance.",
-          "warning"
-        );
+const customers=getNumber(data,[
+"customers",
+"customer",
+"clients",
+"client"
+]);
 
-      }
 
-      else {
+const profit=sales-expenses;
 
-        addInsight(
-          "💰",
-          "Financial result",
-          "Your calculated profit is " +
-          formatMoney(profit) + ".",
-          profit >= 0 ? "good" : "warning"
-        );
+let margin=0;
 
+if(sales>0){
+margin=(profit/sales)*100;
+}
 
-        if (margin >= 30) {
 
-          addInsight(
-            "🚀",
-            "Strong margin",
-            "The calculated profit margin is " +
-            margin.toFixed(1) +
-            "%. This indicates a relatively strong margin based on the data entered.",
-            "good"
-          );
+let revenuePerCustomer=0;
 
-        }
+if(customers>0){
+revenuePerCustomer=sales/customers;
+}
 
-        else if (margin >= 10) {
 
-          addInsight(
-            "📈",
-            "Moderate margin",
-            "The calculated profit margin is " +
-            margin.toFixed(1) +
-            "%. Look for ways to increase revenue or reduce unnecessary costs.",
-            "info"
-          );
+/* METRICS */
 
-        }
+document.getElementById("sales").textContent=
+formatMoney(sales);
 
-        else if (margin >= 0) {
+document.getElementById("expenses").textContent=
+formatMoney(expenses);
 
-          addInsight(
-            "⚠️",
-            "Low margin",
-            "The calculated profit margin is only " +
-            margin.toFixed(1) +
-            "%. Review your major expenses and pricing.",
-            "warning"
-          );
+document.getElementById("profit").textContent=
+formatMoney(profit);
 
-        }
+document.getElementById("margin").textContent=
+margin.toFixed(1)+"%";
 
-        else {
+document.getElementById("customers").textContent=
+customers.toLocaleString("en-IN");
 
-          addInsight(
-            "🚨",
-            "Loss detected",
-            "Expenses are higher than sales in the data entered. Review costs and revenue sources.",
-            "warning"
-          );
+document.getElementById("revenuePerCustomer").textContent=
+formatMoney(revenuePerCustomer);
 
-        }
 
+/* SCORE */
 
-        if (expenses > sales * 0.70) {
+const score=calculateScore(
+sales,
+expenses,
+customers
+);
 
-          addInsight(
-            "💸",
-            "High expenses",
-            "Expenses are more than 70% of sales. Finding unnecessary costs could improve profitability.",
-            "warning"
-          );
 
-        }
+document.getElementById("healthScore").textContent=
+score.total+"/100";
 
+document.getElementById("scoreFill").style.width=
+score.total+"%";
 
-        if (customers > 0) {
 
-          addInsight(
-            "👥",
-            "Customer value",
-            "Average revenue per customer from the entered data is " +
-            formatMoney(revenuePerCustomer) + ".",
-            "info"
-          );
+/* BREAKDOWN */
 
-        }
+document.getElementById("profitPoints").textContent=
+score.profitPoints+"/50";
 
-        else {
+document.getElementById("expensePoints").textContent=
+score.expensePoints+"/30";
 
-          addInsight(
-            "👥",
-            "Customer data missing",
-            "Add your customer count to estimate revenue per customer.",
-            "info"
-          );
+document.getElementById("customerPoints").textContent=
+score.customerPoints+"/20";
 
-        }
 
+document.getElementById("profitProgress").style.width=
+(score.profitPoints/50*100)+"%";
 
-        addInsight(
-          "🏆",
-          "Health score",
-          "BizLens AI calculated a Business Health Score of " +
-          healthScore +
-          "/100 from the numbers you entered.",
-          healthScore >= 60 ? "good" : "warning"
-        );
+document.getElementById("expenseProgress").style.width=
+(score.expensePoints/30*100)+"%";
 
+document.getElementById("customerProgress").style.width=
+(score.customerPoints/20*100)+"%";
 
-        addInsight(
-          "💡",
-          "Next action",
-          "Compare these numbers with previous months to identify whether your business is improving or declining.",
-          "info"
-        );
 
-      }
+const lost=100-score.total;
 
+document.getElementById("pointsLost").textContent=lost;
 
-      /* PRIORITY ACTION */
 
-      let priority = "";
+let lostText="";
 
+if(lost===0){
 
-      if (sales === 0) {
+lostText="🎉 No points lost! Excellent score.";
 
-        priority =
-          "Enter your sales/revenue data first.";
+}else{
 
-      }
+lostText="Improve the areas above to recover these points.";
 
-      else if (profit < 0) {
+}
 
-        priority =
-          "Reduce unnecessary expenses and investigate why costs are higher than revenue.";
+document.getElementById("lostMessage").textContent=lostText;
 
-      }
 
-      else if (margin < 10) {
+/* HEALTH LABEL */
 
-        priority =
-          "Focus on improving your profit margin by controlling major costs and reviewing pricing.";
+let label="";
+let description="";
 
-      }
+if(score.total>=80){
 
-      else if (expenses > sales * 0.70) {
+label="🟢 Excellent";
+description=
+"The business looks financially strong based on the data entered.";
 
-        priority =
-          "Expenses are taking a large share of revenue. Identify the biggest cost categories to optimize.";
+}
 
-      }
+else if(score.total>=60){
 
-      else if (customers === 0) {
+label="🟡 Good";
+description=
+"The business has a healthy foundation, but there is room for improvement.";
 
-        priority =
-          "Add customer data so BizLens AI can calculate customer-level performance.";
+}
 
-      }
+else if(score.total>=40){
 
-      else {
+label="🟠 Needs Attention";
+description=
+"Some important business areas need attention.";
 
-        priority =
-          "Maintain profitability and compare this result with previous periods to find business trends.";
+}
 
-      }
+else{
 
+label="🔴 Critical";
+description=
+"The entered numbers show significant areas that need improvement.";
 
-      document.getElementById("priorityAction").textContent =
-        priority;
+}
 
 
-      document.getElementById("result").style.display =
-        "block";
+document.getElementById("healthLabel").textContent=label;
 
-    }
+document.getElementById("healthDescription").textContent=
+description;
 
-  </script>
+
+/* SALES VS EXPENSES GRAPH */
+
+let maxValue=Math.max(sales,expenses,1);
+
+document.getElementById("salesBar").style.height=
+Math.max((sales/maxValue)*180,5)+"px";
+
+document.getElementById("expenseBar").style.height=
+Math.max((expenses/maxValue)*180,5)+"px";
+
+document.getElementById("salesBarValue").textContent=
+formatMoney(sales);
+
+document.getElementById("expenseBarValue").textContent=
+formatMoney(expenses);
+
+
+/* DONUT */
+
+let profitForChart=Math.max(profit,0);
+
+let totalForChart=profitForChart+expenses;
+
+let profitPercent=0;
+
+if(totalForChart>0){
+profitPercent=(profitForChart/totalForChart)*100;
+}
+
+let expensePercent=100-profitPercent;
+
+document.getElementById("profitPercent").textContent=
+profitPercent.toFixed(0)+"%";
+
+document.getElementById("expensePercent").textContent=
+expensePercent.toFixed(0)+"%";
+
+document.getElementById("donutText").textContent=
+formatMoney(sales);
+
+document.getElementById("donut").style.background=
+"conic-gradient(#2563eb 0deg "+(profitPercent*3.6)+"deg,#f97316 "+(profitPercent*3.6)+"deg 360deg)";
+
+
+/* PROFIT GRAPH */
+
+let profitHeight=0;
+
+if(profit>0 && sales>0){
+profitHeight=(profit/sales)*180;
+}
+
+profitHeight=Math.max(Math.min(profitHeight,180),5);
+
+document.getElementById("profitBar").style.height=
+profitHeight+"px";
+
+document.getElementById("profitBarValue").textContent=
+formatMoney(profit);
+
+
+let marginHeight=Math.max(
+Math.min((Math.max(margin,0)/50)*180,180),
+5
+);
+
+document.getElementById("marginBar").style.height=
+marginHeight+"px";
+
+document.getElementById("marginBarValue").textContent=
+margin.toFixed(1)+"%";
+
+
+/* INSIGHTS */
+
+const insightBox=document.getElementById("insightBox");
+
+insightBox.innerHTML="";
+
+
+function addInsight(icon,title,text,type){
+
+const div=document.createElement("div");
+
+div.className="insight "+type;
+
+div.innerHTML=
+"<b>"+icon+" "+title+"</b><br>"+text;
+
+insightBox.appendChild(div);
+
+}
+
+
+if(sales===0){
+
+addInsight(
+"⚠️",
+"Sales data missing",
+"Enter Sales or Revenue to calculate business performance.",
+"warning"
+);
+
+}else{
+
+addInsight(
+"💰",
+"Financial result",
+"Your calculated profit is "+formatMoney(profit)+".",
+profit>=0?"good":"warning"
+);
+
+
+if(margin>=30){
+
+addInsight(
+"🚀",
+"Strong margin",
+"Your calculated profit margin is "+margin.toFixed(1)+"%.",
+"good"
+);
+
+}else if(margin>=10){
+
+addInsight(
+"📈",
+"Moderate margin",
+"Your calculated profit margin is "+margin.toFixed(1)+"%.",
+"info"
+);
+
+}else{
+
+addInsight(
+"⚠️",
+"Low margin",
+"Your calculated profit margin is "+margin.toFixed(1)+"%. Review costs and pricing.",
+"warning"
+);
+
+}
+
+
+if(expenses>sales*.70){
+
+addInsight(
+"💸",
+"High expenses",
+"Expenses are more than 70% of sales.",
+"warning"
+);
+
+}
+
+
+if(customers>0){
+
+addInsight(
+"👥",
+"Customer value",
+"Average revenue per customer is "+formatMoney(revenuePerCustomer)+".",
+"info"
+);
+
+}else{
+
+addInsight(
+"👥",
+"Customer data missing",
+"Add customer count for customer-level analysis.",
+"info"
+);
+
+}
+
+
+addInsight(
+"🏆",
+"Health score",
+"BizLens calculated "+score.total+"/100. You lost "+lost+" points.",
+score.total>=60?"good":"warning"
+);
+
+
+addInsight(
+"💡",
+"Next action",
+"Compare these numbers with previous months to identify business trends.",
+"info"
+);
+
+}
+
+
+/* PRIORITY ACTION */
+
+let priority="";
+
+if(sales===0){
+
+priority="Enter your sales/revenue data first.";
+
+}else if(profit<0){
+
+priority="Reduce unnecessary expenses and investigate why costs are higher than revenue.";
+
+}else if(margin<10){
+
+priority="Focus on improving your profit margin by controlling major costs and reviewing pricing.";
+
+}else if(expenses>sales*.70){
+
+priority="Expenses are taking a large share of revenue. Identify the biggest cost categories to optimize.";
+
+}else if(customers===0){
+
+priority="Add customer data so BizLens AI can calculate customer-level performance.";
+
+}else{
+
+priority="Maintain profitability and compare this result with previous periods to find business trends.";
+
+}
+
+
+document.getElementById("priorityAction").textContent=
+priority;
+
+
+document.getElementById("result").style.display="block";
+
+}
+
+</script>
 
 </body>
-       </html>
+</html>
