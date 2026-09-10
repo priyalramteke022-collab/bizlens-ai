@@ -88,8 +88,6 @@ font-weight:bold;
 margin-bottom:20px;
 }
 
-/* TOP SECTION */
-
 .top-grid{
 display:grid;
 grid-template-columns:1fr 1fr;
@@ -135,8 +133,6 @@ background:#16a34a;
 transition:.6s;
 }
 
-/* BREAKDOWN */
-
 .breakdown{
 background:#f9fafb;
 border-radius:18px;
@@ -179,8 +175,6 @@ border-left:5px solid #dc2626;
 font-weight:bold;
 }
 
-/* METRICS */
-
 .metrics{
 display:grid;
 grid-template-columns:repeat(3,1fr);
@@ -206,8 +200,6 @@ font-size:23px;
 font-weight:bold;
 }
 
-/* CHARTS */
-
 .charts{
 display:grid;
 grid-template-columns:1fr 1fr;
@@ -225,8 +217,6 @@ background:white;
 .chart-card h3{
 margin-top:0;
 }
-
-/* BAR CHART */
 
 .bar-chart{
 height:230px;
@@ -274,8 +264,6 @@ font-size:13px;
 margin-top:8px;
 }
 
-/* DONUT */
-
 .donut-wrap{
 display:flex;
 align-items:center;
@@ -287,12 +275,6 @@ gap:25px;
 width:180px;
 height:180px;
 border-radius:50%;
-background:conic-gradient(
-#2563eb 0deg,
-#2563eb 180deg,
-#f97316 180deg,
-#f97316 360deg
-);
 display:flex;
 align-items:center;
 justify-content:center;
@@ -325,8 +307,6 @@ margin-right:7px;
 .blue{background:#2563eb}
 .orange{background:#f97316}
 
-/* PROFIT GRAPH */
-
 .profit-chart{
 height:220px;
 display:flex;
@@ -344,15 +324,6 @@ border-radius:8px 8px 0 0;
 position:relative;
 }
 
-.profit-value{
-position:absolute;
-top:-25px;
-width:100%;
-text-align:center;
-font-weight:bold;
-font-size:13px;
-}
-
 .margin-column{
 width:80px;
 background:#7c3aed;
@@ -360,6 +331,7 @@ border-radius:8px 8px 0 0;
 position:relative;
 }
 
+.profit-value,
 .margin-value{
 position:absolute;
 top:-25px;
@@ -368,8 +340,6 @@ text-align:center;
 font-weight:bold;
 font-size:13px;
 }
-
-/* INSIGHTS */
 
 .insights{
 margin-top:25px;
@@ -380,6 +350,7 @@ padding:15px;
 margin-bottom:10px;
 border-radius:12px;
 background:#f3f4f6;
+line-height:1.5;
 }
 
 .good{
@@ -394,8 +365,6 @@ border-left:5px solid #dc2626;
 border-left:5px solid #2563eb;
 }
 
-/* PRIORITY */
-
 .priority{
 padding:18px;
 border-radius:14px;
@@ -404,14 +373,29 @@ border-left:5px solid #111827;
 margin-top:20px;
 }
 
+.problem-box{
+padding:18px;
+border-radius:15px;
+background:#fff7ed;
+border-left:5px solid #f97316;
+margin-bottom:12px;
+line-height:1.6;
+}
+
+.no-problem{
+padding:18px;
+border-radius:15px;
+background:#f0fdf4;
+border-left:5px solid #16a34a;
+line-height:1.6;
+}
+
 .small{
 margin-top:15px;
 color:#6b7280;
 font-size:13px;
 line-height:1.5;
 }
-
-/* MOBILE */
 
 @media(max-width:700px){
 
@@ -444,10 +428,6 @@ flex-direction:column;
 grid-template-columns:1fr;
 }
 
-.bar-chart{
-gap:20px;
-}
-
 }
 </style>
 </head>
@@ -461,9 +441,10 @@ gap:20px;
 <p>Business Data Analyzer</p>
 </div>
 
+
 <div class="card">
 
-<label>Enter your business data</label>
+<label for="data">Enter your business data</label>
 
 <textarea id="data" placeholder="Example:
 Sales: ₹5,00,000
@@ -488,7 +469,7 @@ Tip: Enter Sales, Expenses and Customers for a more useful analysis.
 </div>
 
 
-<!-- SCORE + BREAKDOWN -->
+<!-- HEALTH + BREAKDOWN -->
 
 <div class="top-grid">
 
@@ -500,9 +481,7 @@ Tip: Enter Sales, Expenses and Customers for a more useful analysis.
 0/100
 </div>
 
-<div class="score-label" id="healthLabel">
--
-</div>
+<div class="score-label" id="healthLabel">-</div>
 
 <div class="score-description" id="healthDescription">
 -
@@ -527,7 +506,8 @@ Tip: Enter Sales, Expenses and Customers for a more useful analysis.
 </div>
 
 <div class="progress">
-<div class="progress-fill" id="profitProgress"
+<div class="progress-fill"
+id="profitProgress"
 style="background:#16a34a;width:0%">
 </div>
 </div>
@@ -543,7 +523,8 @@ style="background:#16a34a;width:0%">
 </div>
 
 <div class="progress">
-<div class="progress-fill" id="expenseProgress"
+<div class="progress-fill"
+id="expenseProgress"
 style="background:#2563eb;width:0%">
 </div>
 </div>
@@ -559,7 +540,8 @@ style="background:#2563eb;width:0%">
 </div>
 
 <div class="progress">
-<div class="progress-fill" id="customerProgress"
+<div class="progress-fill"
+id="customerProgress"
 style="background:#f97316;width:0%">
 </div>
 </div>
@@ -568,11 +550,14 @@ style="background:#f97316;width:0%">
 
 
 <div class="lost">
-❌ Points Lost: <span id="pointsLost">0</span>/100
+
+❌ Points Lost:
+<span id="pointsLost">0</span>/100
+
 <br>
-<small id="lostMessage">
--
-</small>
+
+<small id="lostMessage">-</small>
+
 </div>
 
 </div>
@@ -628,16 +613,29 @@ style="background:#f97316;width:0%">
 <div class="bar-chart">
 
 <div>
-<div class="bar sales-bar" id="salesBar">
-<div class="bar-label" id="salesBarValue">₹0</div>
+<div class="bar sales-bar"
+id="salesBar"
+style="height:5px">
+
+<div class="bar-label"
+id="salesBarValue">₹0</div>
+
 </div>
+
 <div class="bar-name">Sales</div>
 </div>
 
+
 <div>
-<div class="bar expense-bar" id="expenseBar">
-<div class="bar-label" id="expenseBarValue">₹0</div>
+<div class="bar expense-bar"
+id="expenseBar"
+style="height:5px">
+
+<div class="bar-label"
+id="expenseBarValue">₹0</div>
+
 </div>
+
 <div class="bar-name">Expenses</div>
 </div>
 
@@ -652,7 +650,8 @@ style="background:#f97316;width:0%">
 
 <div class="donut-wrap">
 
-<div class="donut" id="donut">
+<div class="donut"
+id="donut">
 
 <div class="donut-inner">
 <span id="donutText">₹0</span>
@@ -685,24 +684,61 @@ Expenses:
 
 <!-- PROFIT GRAPH -->
 
-<div class="chart-card" style="margin-top:20px">
+<div class="chart-card"
+style="margin-top:20px">
 
 <h3>📈 Profit & Profit Margin</h3>
 
 <div class="profit-chart">
 
 <div>
-<div class="profit-column" id="profitBar">
-<div class="profit-value" id="profitBarValue">₹0</div>
-</div>
-<div class="bar-name">Profit</div>
+
+<div class="profit-column"
+id="profitBar"
+style="height:5px">
+
+<div class="profit-value"
+id="profitBarValue">₹0</div>
+
 </div>
 
-<div>
-<div class="margin-column" id="marginBar">
-<div class="margin-value" id="marginBarValue">0%</div>
+<div class="bar-name">Profit</div>
+
 </div>
+
+
+<div>
+
+<div class="margin-column"
+id="marginBar"
+style="height:5px">
+
+<div class="margin-value"
+id="marginBarValue">0%</div>
+
+</div>
+
 <div class="bar-name">Margin</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- PROBLEM DETECTION -->
+
+<div class="card"
+style="margin-top:20px">
+
+<h2>🚨 Problem Detection</h2>
+
+<div id="problemBox">
+
+<div class="no-problem">
+Enter your business data and click
+<b>Analyze Business</b> to detect problems.
 </div>
 
 </div>
@@ -738,6 +774,7 @@ Expenses:
 
 <script>
 
+
 function getNumber(text,patterns){
 
 for(let pattern of patterns){
@@ -750,25 +787,35 @@ pattern+"\\s*[:=]?\\s*[₹$€£]?\\s*([0-9,]+(?:\\.[0-9]+)?)",
 const match=text.match(regex);
 
 if(match){
-return parseFloat(match[1].replace(/,/g,""));
+
+return parseFloat(
+match[1].replace(/,/g,"")
+);
+
 }
 
 }
 
 return 0;
+
 }
 
 
 function formatMoney(number){
 
-return "₹"+Math.round(number).toLocaleString("en-IN");
+return "₹"+Math.round(number)
+.toLocaleString("en-IN");
 
 }
 
 
-/* SCORE CALCULATION */
+/* SCORE */
 
-function calculateScore(sales,expenses,customers){
+function calculateScore(
+sales,
+expenses,
+customers
+){
 
 let profitPoints=0;
 let expensePoints=0;
@@ -777,7 +824,10 @@ let customerPoints=0;
 if(sales>0){
 
 const profit=sales-expenses;
-const margin=(profit/sales)*100;
+
+const margin=
+(profit/sales)*100;
+
 
 /* PROFITABILITY 50 */
 
@@ -799,7 +849,8 @@ profitPoints=0;
 
 /* EXPENSE CONTROL 30 */
 
-const expenseRatio=expenses/sales;
+const expenseRatio=
+expenses/sales;
 
 if(expenseRatio<=0.50)
 expensePoints=30;
@@ -827,154 +878,374 @@ customerPoints=5;
 
 }
 
-return {
+
+return{
+
 profitPoints,
 expensePoints,
 customerPoints,
-total:profitPoints+expensePoints+customerPoints
+
+total:
+profitPoints+
+expensePoints+
+customerPoints
+
 };
 
 }
 
 
-function analyzeBusiness(){
+/* PROBLEM DETECTION */
 
-const data=document.getElementById("data").value.trim();
+function detectProblems(
+sales,
+expenses,
+customers,
+profit,
+margin
+){
 
-if(!data){
+const box=
+document.getElementById("problemBox");
 
-alert("Please enter your business data first.");
+box.innerHTML="";
+
+let problems=[];
+
+
+if(sales<=0){
+
+problems.push({
+
+icon:"🔴",
+
+title:"Sales data missing",
+
+why:"Sales or Revenue value enter nahi ki gayi.",
+
+action:"Sales/Revenue amount enter karo."
+
+});
+
+}
+
+
+else{
+
+if(profit<0){
+
+problems.push({
+
+icon:"🚨",
+
+title:"Business is making a loss",
+
+why:"Expenses sales se zyada hain.",
+
+action:
+"Major expenses identify karke unnecessary costs reduce karo."
+
+});
+
+}
+
+
+if(margin<10){
+
+problems.push({
+
+icon:"📉",
+
+title:"Low Profit Margin",
+
+why:
+"Profit margin sirf "+
+margin.toFixed(1)+"% hai.",
+
+action:
+"Pricing improve karo ya unnecessary costs reduce karo."
+
+});
+
+}
+
+
+if(expenses>sales*0.70){
+
+problems.push({
+
+icon:"💸",
+
+title:"High Expenses",
+
+why:
+"Expenses sales ke 70% se zyada hain.",
+
+action:
+"Sabse bade expense categories ko review karo."
+
+});
+
+}
+
+
+if(customers<=0){
+
+problems.push({
+
+icon:"👥",
+
+title:"Customer data missing",
+
+why:
+"Customer count available nahi hai.",
+
+action:
+"Total customers ka number enter karo."
+
+});
+
+}
+
+}
+
+
+/* DISPLAY */
+
+if(problems.length===0){
+
+box.innerHTML=`
+
+<div class="no-problem">
+
+<b>✅ No Major Problem Detected</b>
+
+<br>
+
+Business data ke according
+koi major problem detect nahi hui.
+
+</div>
+
+`;
+
 return;
 
 }
 
 
-const sales=getNumber(data,[
+problems.forEach(
+(problem,index)=>{
+
+const div=
+document.createElement("div");
+
+div.className="problem-box";
+
+div.innerHTML=`
+
+<b>
+${problem.icon}
+${index+1}. ${problem.title}
+</b>
+
+<br><br>
+
+<b>Why?</b>
+${problem.why}
+
+<br>
+
+<b>🎯 What to do?</b>
+${problem.action}
+
+`;
+
+box.appendChild(div);
+
+});
+
+}
+
+
+/* MAIN ANALYZER */
+
+function analyzeBusiness(){
+
+const data=
+document.getElementById("data")
+.value
+.trim();
+
+
+if(!data){
+
+alert(
+"Please enter your business data first."
+);
+
+return;
+
+}
+
+
+const sales=getNumber(
+data,
+[
 "sales",
 "revenue",
 "income"
-]);
+]
+);
 
 
-const expenses=getNumber(data,[
+const expenses=getNumber(
+data,
+[
 "expenses",
 "expense",
 "cost",
 "costs"
-]);
+]
+);
 
 
-const customers=getNumber(data,[
+const customers=getNumber(
+data,
+[
 "customers",
 "customer",
 "clients",
 "client"
-]);
+]
+);
 
 
-const profit=sales-expenses;
+const profit=
+sales-expenses;
+
 
 let margin=0;
 
 if(sales>0){
-margin=(profit/sales)*100;
+
+margin=
+(profit/sales)*100;
+
 }
 
 
 let revenuePerCustomer=0;
 
 if(customers>0){
-revenuePerCustomer=sales/customers;
+
+revenuePerCustomer=
+sales/customers;
+
 }
 
 
 /* METRICS */
 
-document.getElementById("sales").textContent=
+document.getElementById("sales")
+.textContent=
 formatMoney(sales);
 
-document.getElementById("expenses").textContent=
+document.getElementById("expenses")
+.textContent=
 formatMoney(expenses);
 
-document.getElementById("profit").textContent=
+document.getElementById("profit")
+.textContent=
 formatMoney(profit);
 
-document.getElementById("margin").textContent=
+document.getElementById("margin")
+.textContent=
 margin.toFixed(1)+"%";
 
-document.getElementById("customers").textContent=
+document.getElementById("customers")
+.textContent=
 customers.toLocaleString("en-IN");
 
-document.getElementById("revenuePerCustomer").textContent=
+document.getElementById("revenuePerCustomer")
+.textContent=
 formatMoney(revenuePerCustomer);
 
 
 /* SCORE */
 
-const score=calculateScore(
+const score=
+calculateScore(
 sales,
 expenses,
 customers
 );
 
 
-document.getElementById("healthScore").textContent=
+document.getElementById("healthScore")
+.textContent=
 score.total+"/100";
 
-document.getElementById("scoreFill").style.width=
+document.getElementById("scoreFill")
+.style.width=
 score.total+"%";
 
 
 /* BREAKDOWN */
 
-document.getElementById("profitPoints").textContent=
+document.getElementById("profitPoints")
+.textContent=
 score.profitPoints+"/50";
 
-document.getElementById("expensePoints").textContent=
+document.getElementById("expensePoints")
+.textContent=
 score.expensePoints+"/30";
 
-document.getElementById("customerPoints").textContent=
+document.getElementById("customerPoints")
+.textContent=
 score.customerPoints+"/20";
 
 
-document.getElementById("profitProgress").style.width=
+document.getElementById("profitProgress")
+.style.width=
 (score.profitPoints/50*100)+"%";
 
-document.getElementById("expenseProgress").style.width=
+document.getElementById("expenseProgress")
+.style.width=
 (score.expensePoints/30*100)+"%";
 
-document.getElementById("customerProgress").style.width=
+document.getElementById("customerProgress")
+.style.width=
 (score.customerPoints/20*100)+"%";
 
 
-const lost=100-score.total;
+const lost=
+100-score.total;
 
-document.getElementById("pointsLost").textContent=lost;
-
-
-let lostText="";
-
-if(lost===0){
-
-lostText="🎉 No points lost! Excellent score.";
-
-}else{
-
-lostText="Improve the areas above to recover these points.";
-
-}
-
-document.getElementById("lostMessage").textContent=lostText;
+document.getElementById("pointsLost")
+.textContent=
+lost;
 
 
-/* HEALTH LABEL */
+document.getElementById("lostMessage")
+.textContent=
+lost===0
+?
+"🎉 No points lost! Excellent score."
+:
+"Improve the areas above to recover these points.";
+
+
+/* HEALTH */
 
 let label="";
 let description="";
 
+
 if(score.total>=80){
 
 label="🟢 Excellent";
+
 description=
 "The business looks financially strong based on the data entered.";
 
@@ -983,6 +1254,7 @@ description=
 else if(score.total>=60){
 
 label="🟡 Good";
+
 description=
 "The business has a healthy foundation, but there is room for improvement.";
 
@@ -991,6 +1263,7 @@ description=
 else if(score.total>=40){
 
 label="🟠 Needs Attention";
+
 description=
 "Some important business areas need attention.";
 
@@ -999,60 +1272,97 @@ description=
 else{
 
 label="🔴 Critical";
+
 description=
 "The entered numbers show significant areas that need improvement.";
 
 }
 
 
-document.getElementById("healthLabel").textContent=label;
+document.getElementById("healthLabel")
+.textContent=label;
 
-document.getElementById("healthDescription").textContent=
-description;
+document.getElementById("healthDescription")
+.textContent=description;
 
 
-/* SALES VS EXPENSES GRAPH */
+/* SALES VS EXPENSE GRAPH */
 
-let maxValue=Math.max(sales,expenses,1);
+const maxValue=
+Math.max(
+sales,
+expenses,
+1
+);
 
-document.getElementById("salesBar").style.height=
-Math.max((sales/maxValue)*180,5)+"px";
 
-document.getElementById("expenseBar").style.height=
-Math.max((expenses/maxValue)*180,5)+"px";
+document.getElementById("salesBar")
+.style.height=
+Math.max(
+(sales/maxValue)*180,
+5
+)+"px";
 
-document.getElementById("salesBarValue").textContent=
+
+document.getElementById("expenseBar")
+.style.height=
+Math.max(
+(expenses/maxValue)*180,
+5
+)+"px";
+
+
+document.getElementById("salesBarValue")
+.textContent=
 formatMoney(sales);
 
-document.getElementById("expenseBarValue").textContent=
+document.getElementById("expenseBarValue")
+.textContent=
 formatMoney(expenses);
 
 
 /* DONUT */
 
-let profitForChart=Math.max(profit,0);
+const profitForChart=
+Math.max(profit,0);
 
-let totalForChart=profitForChart+expenses;
+const totalForChart=
+profitForChart+expenses;
+
 
 let profitPercent=0;
 
 if(totalForChart>0){
-profitPercent=(profitForChart/totalForChart)*100;
+
+profitPercent=
+(profitForChart/totalForChart)*100;
+
 }
 
-let expensePercent=100-profitPercent;
 
-document.getElementById("profitPercent").textContent=
+const expensePercent=
+100-profitPercent;
+
+
+document.getElementById("profitPercent")
+.textContent=
 profitPercent.toFixed(0)+"%";
 
-document.getElementById("expensePercent").textContent=
+document.getElementById("expensePercent")
+.textContent=
 expensePercent.toFixed(0)+"%";
 
-document.getElementById("donutText").textContent=
+
+document.getElementById("donutText")
+.textContent=
 formatMoney(sales);
 
-document.getElementById("donut").style.background=
-"conic-gradient(#2563eb 0deg "+(profitPercent*3.6)+"deg,#f97316 "+(profitPercent*3.6)+"deg 360deg)";
+
+document.getElementById("donut")
+.style.background=
+"conic-gradient(#2563eb 0deg "+
+(profitPercent*3.6)+"deg,#f97316 "+
+(profitPercent*3.6)+"deg 360deg)";
 
 
 /* PROFIT GRAPH */
@@ -1060,45 +1370,88 @@ document.getElementById("donut").style.background=
 let profitHeight=0;
 
 if(profit>0 && sales>0){
-profitHeight=(profit/sales)*180;
+
+profitHeight=
+(profit/sales)*180;
+
 }
 
-profitHeight=Math.max(Math.min(profitHeight,180),5);
-
-document.getElementById("profitBar").style.height=
-profitHeight+"px";
-
-document.getElementById("profitBarValue").textContent=
-formatMoney(profit);
-
-
-let marginHeight=Math.max(
-Math.min((Math.max(margin,0)/50)*180,180),
+profitHeight=
+Math.max(
+Math.min(profitHeight,180),
 5
 );
 
-document.getElementById("marginBar").style.height=
+
+document.getElementById("profitBar")
+.style.height=
+profitHeight+"px";
+
+
+document.getElementById("profitBarValue")
+.textContent=
+formatMoney(profit);
+
+
+let marginHeight=
+Math.max(
+Math.min(
+(Math.max(margin,0)/50)*180,
+180
+),
+5
+);
+
+
+document.getElementById("marginBar")
+.style.height=
 marginHeight+"px";
 
-document.getElementById("marginBarValue").textContent=
+
+document.getElementById("marginBarValue")
+.textContent=
 margin.toFixed(1)+"%";
+
+
+/* PROBLEM DETECTION */
+
+detectProblems(
+sales,
+expenses,
+customers,
+profit,
+margin
+);
 
 
 /* INSIGHTS */
 
-const insightBox=document.getElementById("insightBox");
+const insightBox=
+document.getElementById("insightBox");
 
 insightBox.innerHTML="";
 
 
-function addInsight(icon,title,text,type){
+function addInsight(
+icon,
+title,
+text,
+type
+){
 
-const div=document.createElement("div");
+const div=
+document.createElement("div");
 
-div.className="insight "+type;
+div.className=
+"insight "+type;
 
 div.innerHTML=
-"<b>"+icon+" "+title+"</b><br>"+text;
+"<b>"+
+icon+
+" "+
+title+
+"</b><br>"+
+text;
 
 insightBox.appendChild(div);
 
@@ -1114,13 +1467,20 @@ addInsight(
 "warning"
 );
 
-}else{
+}
+
+else{
 
 addInsight(
 "💰",
 "Financial result",
-"Your calculated profit is "+formatMoney(profit)+".",
-profit>=0?"good":"warning"
+"Your calculated profit is "+
+formatMoney(profit)+".",
+profit>=0
+?
+"good"
+:
+"warning"
 );
 
 
@@ -1129,25 +1489,32 @@ if(margin>=30){
 addInsight(
 "🚀",
 "Strong margin",
-"Your calculated profit margin is "+margin.toFixed(1)+"%.",
+"Your calculated profit margin is "+
+margin.toFixed(1)+"%.",
 "good"
 );
 
-}else if(margin>=10){
+}
+
+else if(margin>=10){
 
 addInsight(
 "📈",
 "Moderate margin",
-"Your calculated profit margin is "+margin.toFixed(1)+"%.",
+"Your calculated profit margin is "+
+margin.toFixed(1)+"%.",
 "info"
 );
 
-}else{
+}
+
+else{
 
 addInsight(
 "⚠️",
 "Low margin",
-"Your calculated profit margin is "+margin.toFixed(1)+"%. Review costs and pricing.",
+"Your calculated profit margin is "+
+margin.toFixed(1)+"%. Review costs and pricing.",
 "warning"
 );
 
@@ -1171,11 +1538,14 @@ if(customers>0){
 addInsight(
 "👥",
 "Customer value",
-"Average revenue per customer is "+formatMoney(revenuePerCustomer)+".",
+"Average revenue per customer is "+
+formatMoney(revenuePerCustomer)+".",
 "info"
 );
 
-}else{
+}
+
+else{
 
 addInsight(
 "👥",
@@ -1190,8 +1560,16 @@ addInsight(
 addInsight(
 "🏆",
 "Health score",
-"BizLens calculated "+score.total+"/100. You lost "+lost+" points.",
-score.total>=60?"good":"warning"
+"BizLens calculated "+
+score.total+
+"/100. You lost "+
+lost+
+" points.",
+score.total>=60
+?
+"good"
+:
+"warning"
 );
 
 
@@ -1205,46 +1583,65 @@ addInsight(
 }
 
 
-/* PRIORITY ACTION */
+/* PRIORITY */
 
 let priority="";
 
+
 if(sales===0){
 
-priority="Enter your sales/revenue data first.";
+priority=
+"Enter your sales/revenue data first.";
 
-}else if(profit<0){
+}
 
-priority="Reduce unnecessary expenses and investigate why costs are higher than revenue.";
+else if(profit<0){
 
-}else if(margin<10){
+priority=
+"Reduce unnecessary expenses and investigate why costs are higher than revenue.";
 
-priority="Focus on improving your profit margin by controlling major costs and reviewing pricing.";
+}
 
-}else if(expenses>sales*.70){
+else if(margin<10){
 
-priority="Expenses are taking a large share of revenue. Identify the biggest cost categories to optimize.";
+priority=
+"Focus on improving your profit margin by controlling major costs and reviewing pricing.";
 
-}else if(customers===0){
+}
 
-priority="Add customer data so BizLens AI can calculate customer-level performance.";
+else if(expenses>sales*.70){
 
-}else{
+priority=
+"Expenses are taking a large share of revenue. Identify the biggest cost categories to optimize.";
 
-priority="Maintain profitability and compare this result with previous periods to find business trends.";
+}
+
+else if(customers===0){
+
+priority=
+"Add customer data so BizLens AI can calculate customer-level performance.";
+
+}
+
+else{
+
+priority=
+"Maintain profitability and compare this result with previous periods to find business trends.";
 
 }
 
 
-document.getElementById("priorityAction").textContent=
+document.getElementById("priorityAction")
+.textContent=
 priority;
 
 
-document.getElementById("result").style.display="block";
+document.getElementById("result")
+.style.display="block";
 
 }
 
 </script>
 
 </body>
-</html>
+  </html>
