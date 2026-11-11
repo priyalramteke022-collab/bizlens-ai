@@ -897,6 +897,7 @@ customerPoints
 
 /* PROBLEM DETECTION */
 
+
 function detectProblems(
 sales,
 expenses,
@@ -905,160 +906,99 @@ profit,
 margin
 ){
 
-const box=
-document.getElementById("problemBox");
+const box = document.getElementById("problemBox");
+box.innerHTML = "";
 
-box.innerHTML="";
+let problems = [];
 
-let problems=[];
-
-
-if(sales<=0){
+if(sales <= 0){
 
 problems.push({
-
 icon:"🔴",
-
-title:"Sales data missing",
-
-why:"Sales or Revenue value enter nahi ki gayi.",
-
-action:"Sales/Revenue amount enter karo."
-
+title:"Sales Data Missing",
+risk:"HIGH",
+why:"Sales ya revenue ki value available nahi hai.",
+action:"Pehle correct sales data enter karo."
 });
 
-}
+}else{
 
-
-else{
-
-if(profit<0){
+if(profit < 0){
 
 problems.push({
-
 icon:"🚨",
-
-title:"Business is making a loss",
-
-why:"Expenses sales se zyada hain.",
-
-action:
-"Major expenses identify karke unnecessary costs reduce karo."
-
+title:"Business Loss Detected",
+risk:"HIGH",
+why:"Expenses sales se zyada hain. Loss: " + formatMoney(Math.abs(profit)),
+action:"Expenses ka review karo aur unnecessary costs identify karo."
 });
 
 }
 
-
-if(margin<10){
+if(margin >= 0 && margin < 10){
 
 problems.push({
-
 icon:"📉",
-
 title:"Low Profit Margin",
-
-why:
-"Profit margin sirf "+
-margin.toFixed(1)+"% hai.",
-
-action:
-"Pricing improve karo ya unnecessary costs reduce karo."
-
+risk:"MEDIUM",
+why:"Profit margin sirf " + margin.toFixed(1) + "% hai.",
+action:"Pricing, product costs aur operating expenses review karo."
 });
 
 }
 
-
-if(expenses>sales*0.70){
+if(expenses > sales * 0.70){
 
 problems.push({
-
 icon:"💸",
-
-title:"High Expenses",
-
-why:
-"Expenses sales ke 70% se zyada hain.",
-
-action:
-"Sabse bade expense categories ko review karo."
-
+title:"High Expense Ratio",
+risk:"MEDIUM",
+why:"Expenses sales ke 70% se zyada hain.",
+action:"Major expense categories identify karke budget review karo."
 });
 
 }
 
-
-if(customers<=0){
+if(customers <= 0){
 
 problems.push({
-
 icon:"👥",
-
-title:"Customer data missing",
-
-why:
-"Customer count available nahi hai.",
-
-action:
-"Total customers ka number enter karo."
-
+title:"Customer Data Missing",
+risk:"LOW",
+why:"Customer count available nahi hai.",
+action:"Total customer count enter karo."
 });
 
 }
 
 }
 
+if(problems.length === 0){
 
-/* DISPLAY */
-
-if(problems.length===0){
-
-box.innerHTML=`
-
+box.innerHTML = `
 <div class="no-problem">
-
 <b>✅ No Major Problem Detected</b>
-
 <br>
-
-Business data ke according
-koi major problem detect nahi hui.
-
+Entered data mein koi configured warning nahi mili.
 </div>
-
 `;
-
 return;
 
 }
 
+problems.forEach((problem,index)=>{
 
-problems.forEach(
-(problem,index)=>{
+const div = document.createElement("div");
+div.className = "problem-box";
 
-const div=
-document.createElement("div");
-
-div.className="problem-box";
-
-div.innerHTML=`
-
-<b>
-${problem.icon}
-${index+1}. ${problem.title}
-</b>
-
+div.innerHTML = `
+<b>${problem.icon} ${index+1}. ${problem.title}</b>
 <br><br>
-
-<b>Why?</b>
-${problem.why}
-
-<br>
-
-<b>🎯 What to do?</b>
-${problem.action}
-
+<b>Risk Level:</b> ${problem.risk}
+<br><br>
+<b>Why?</b> ${problem.why}
+<br><br>
+<b>🎯 Action Plan:</b> ${problem.action}
 `;
 
 box.appendChild(div);
